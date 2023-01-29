@@ -72,16 +72,22 @@ const newElement = (props) => {
   return elem
 }
 
-function clickChoice(e, choice, optionId){
+function clickChoice(e, choice, optionId) {
+  const options = document.querySelectorAll('.variant__option')
+  options.forEach(o=> o.setAttribute('data-locked', false))
+  const option = document.querySelector(`[data-option-id="${optionId}"]`);
+  option.setAttribute('data-locked', true)
+
   const choiceAdded = VARIANTS.addChoice(choice.id)
+  e.target.checked = choiceAdded
+
   VARIANTS.selectedVariants = VARIANTS.findMatchingVariants()
   const updatedChoices = getChoicesValues(VARIANTS.selectedVariants)
   updateAvailableChoices(updatedChoices)
 
-  e.target.checked = choiceAdded
-
-  const option = document.querySelector(`[data-option-id="${optionId}"]`);
-  option.setAttribute('data-locked', true)
+  const sender = document.querySelector(`[data-choice-id="${choice.id}"]`)
+  sender.style.opacity = 1
+  sender.style.pointerEvents = 'auto'
 }
 
 const generateOptionChoices = (choices, optionId) => {
@@ -117,6 +123,7 @@ const generateVariantsOptions = (options) => {
     const variant__option = document.createElement('div')
     variant__option.classList.add('variant__option')
     variant__option.setAttribute('data-option-id', option.id)
+    variant__option.setAttribute('data-locked', false)
 
     const title = document.createElement('div')
     title.classList.add('variants__option-title')
@@ -130,30 +137,42 @@ const generateVariantsOptions = (options) => {
   })
 }
 
-const updateAvailableChoices = (arrChoices, arrOptionsToSkip=[]) => {
+const updateAvailableChoices = (newChoices) => {
   const variant__choices = document.querySelectorAll('.variant__choice')
   variant__choices.forEach(choice => choice.style.opacity = 0.3)
   variant__choices.forEach(choice => choice.style.pointerEvents = 'none')
 
 
-  const arrOptions = document.querySelectorAll('variant__option')
+  const arrOptions = [...document.querySelectorAll('[data-locked="false"]')]
+  const currentChoices = [...document.querySelectorAll('.variant__choice:not(.variant__option[data-locked="true"] .variant__choice)')]
 
-  arrChoices.forEach((choice) => {
-    const variant__choice = document.querySelector(`[data-choice-id="${choice}"]`);
-    if (variant__choice !== null) {
-      variant__choice.style.opacity = 1
-      variant__choice.style.pointerEvents = 'auto'
-    }
+  console.log('arrOptions', arrOptions)
+  console.log('currentChoices', currentChoices)
+  console.log('arrChoices', newChoices)
+
+
+
+  newChoices.forEach((choice) => {
+    currentChoices.forEach(variant__choice => {
+      if (variant__choice.dataset.choiceId === `${choice}`) {
+        console.log('found...')
+        variant__choice.style.opacity = 1
+        variant__choice.style.pointerEvents = 'auto'
+      }
+    })
   })
 }
 
 const getChoicesValues = product_variants => {
-  const initialChoices = []
+  let initialChoices = []
   product_variants.forEach(product => {
     initialChoices.push(product.variation_value1?.variation_option_id)
     initialChoices.push(product.variation_value2?.variation_option_id)
     initialChoices.push(product.variation_value3?.variation_option_id)
   })
+  const newSet = [... new Set(initialChoices)]
+  const removeUndefined = newSet.filter(item => typeof item !== 'undefined')
+  initialChoices = [...removeUndefined]
   return initialChoices
 }
 
@@ -165,7 +184,7 @@ const loadVariants = (product) => {
   generateVariantsOptions(product.product_variant_options)
 
   const initialChoices = getChoicesValues(product.product_variants)
-  updateAvailableChoices(initialChoices.filter(c => typeof c !== 'undefined'))
+  updateAvailableChoices(initialChoices)
 
   VARIANTS.initVariants(product)
 }
@@ -538,12 +557,10 @@ const test1 = () => {
   console.log(VARIANTS)
 }
 
-alert('search for "PENDING TODO.png" for instructions')
-
 window.addEventListener('load', function (event) {
   VARIANTS.currentProduct = dummyProduct()
   showVariants(dummyProduct())
-  
+
   document.querySelector('.product-btn').onclick = () => {
     showVariants(dummyProduct())
   }
