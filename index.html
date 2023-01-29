@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+</head>
+
+<script type="text/javascript">
+
+</script>
+
+<body style="background-color:whitesmoke">
+
+  <button class="product-btn" style="position: absolute; ">Show variants</button>
+  <div class="variants__container">
+    <div class="variants__card">
+      <div class="variants__name" style="font-weight: bold; font-size: 1.2rem"></div>
+      <div class="variants__id"></div>
+      <div class="variant__options__container"></div>
+      <div
+        style="display: flex; flex-direction: column; align-items: center; position: absolute; bottom: 0rem; width: 100%; margin-bottom: 1rem;box-sizing: border-box;">
+        <div class="variants__price" style="color: #595959; margin-bottom: 2rem;; font-weight: bold"></div>
+        <button class="add-btn" style="margin: auto" onclick="addToCartVariantProduct()">Add to Cart</button>
+        <button class="test1-btn" style="margin: auto" onclick="test1()">Console.log VARIANTS</button>
+      </div>
+      <button class="variants__close" onclick="hideVariants()">X</button>
+    </div>
+    <style>
+      .variants__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 400px;
+        left: 0;
+        padding: 1rem;
+        position: absolute;
+        top: 0;
+        transition: all 0.2s ease-in-out;
+        width: 400px;
+        background: #dee9ee;
+        border-bottom: solid 10px gray;
+        transform: translateX(-1rem);
+        opacity: 0;
+        z-index: -1;
+      }
+
+      .variants__name {
+        border-bottom: 1px solid gray;
+        margin-bottom: .4rem;
+      }
+
+      .variant__options__container {
+        margin: 1rem 0;
+        box-sizing: border-box;
+      }
+
+      .variant__option {
+        margin-top: 0.5rem;
+      }
+
+      .variants__option-title {
+        font-weight: bold;
+      }
+
+      .variant__options__container label {
+        margin-left: .4rem;
+      }
+
+      .variant__options__container {
+        padding: 1rem;
+        width: 100%;
+      }
+
+      .variant__choices {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .4rem;
+        width: 100%;
+        overflow-y: auto;
+        max-height: 100px;
+      }
+
+      .variant__choice:hover {
+        cursor: pointer;
+        background: #bababa;
+      }
+
+      .variant__choice {
+        transition: all 100ms
+      }
+
+      .variant__choice:active {
+        transform: translate(1px, 0px)
+      }
+
+      .choice-radio {
+        margin-right: .4rem;
+      }
+
+      .variants__price {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .variants__card {
+        height: 100%
+      }
+
+      .variants__close {
+        background: red;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+        color: white;
+        border-radius: 50%;
+        border: none;
+        height: 2.2rem;
+        width: 2.2rem;
+      }
+    </style>
+  </div>
+
+  <script src="variants-manager.js"></script>
+</body>
+
+</html>
